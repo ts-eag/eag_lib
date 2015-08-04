@@ -3,17 +3,19 @@
 {% block title %}Home Title{% endblock %}
 
 {% block body %}
-    <h2>Home Body</h2>
+    <h1>도서관 예약 시스템</h1>
 
     <h4>Man</h4>
     <ul id="id_man_room">
         <strong id="id_man_room_available">10</strong>/
         <strong id="id_man_room_total">10</strong>
+        <a href="{% url 'man_room' %}" class="btn btn-info" role="button">예약</a>
     </ul>
 
     <h4>Woman</h4>
     <ul id="woman_room">
         <strong id="id_man_room_available">5</strong>/
         <strong id="id_man_room_total">10</strong>
+{#        <a href="{% url 'woman_list' %}" class="btn btn-info" role="button">예약</a>#}
     </ul>
 {% endblock %}
