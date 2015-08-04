@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
+from django.core.exceptions import ValidationError
 from django.db import models
+
+
+def validate_file_extension(value):
+    if not value.name.endswith('.apk'):
+        raise ValidationError('apk file만 올려주세요.')
 
 
 class AppVersion(models.Model):
@@ -7,7 +13,9 @@ class AppVersion(models.Model):
     app_version = models.CharField(max_length=10, null=False, blank=False, help_text='App의 버전을 입력합니다. 모바일 어플은 이 정보로 새로운 App인지 비교하기 때문에 중요합니다.')
     # file_name = models.CharField(max_length=50, null=False, blank=False)
     # file_path = models.CharField(max_length=200, null=False, blank=False)
-    apk_file = models.FileField(upload_to='apk/', help_text='apk 파일만 올립니다.')
+    apk_file = models.FileField(upload_to='apk/',
+                                validators=[validate_file_extension],
+                                help_text='apk 파일만 올립니다.')
     apk_size = models.IntegerField(default=0, help_text='자동 계산 됩니다. 입력 생략')
     # ipa_file = models.FileField(upload_to='ipa/')
     # file_size = models.BigIntegerField(null=True)
