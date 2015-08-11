@@ -1,4 +1,5 @@
 import os
+from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render
 from check_app_version.models import AppVersion
@@ -18,6 +19,7 @@ def check_version(request, app_id):
                # 'ipa_file': app_dic.ipa_file,
                'register_date': app.register_date,
                'download_cnt': app.download_cnt}
+        # return serializers.serialize('xml', app)
         return JsonResponse(dic)
 
     # apk, ipa. file type field.

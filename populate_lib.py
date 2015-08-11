@@ -121,6 +121,7 @@ def add_reservation(user_id, seat_id, start_time, end_time):
     return r
 
 
+
 def add_extension_time(user_id, date, frequency):
     try:
         e = ExtensionTime.objects.get_or_create(
