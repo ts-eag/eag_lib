@@ -13,18 +13,28 @@ class RoomAdmin(admin.ModelAdmin):
 
 
 class ExtensionTimeAdmin(admin.ModelAdmin):
-    list_display = ['user_id', 'date', 'frequency']
-    list_filter = ['user_id']
+    list_display = ['user', 'date', 'frequency']
+    list_filter = ['user']
     # list_display_links = ['id', 'title']
-    search_fields = ['user_id', 'date']
-    ordering = ['-user_id']
+    search_fields = ['user', 'date']
+    ordering = ['-user']
+
+
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'user', 'seat', 'start_time_strftime',
+                    'end_time_strftime', 'seat_status']
+
+
+class SeatAdmin(admin.ModelAdmin):
+    list_display = ['id', 'room', 'seat_num', 'status', 'type']
+    list_filter = ['room', 'status', 'type']
 
 
 admin.site.register(User)
-admin.site.register(Seat)
+admin.site.register(Seat, SeatAdmin)
 admin.site.register(Type)
 admin.site.register(Status)
 admin.site.register(ExtensionTime, ExtensionTimeAdmin)
-admin.site.register(Reservation)
+admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(Room, RoomAdmin)
 

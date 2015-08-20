@@ -1,0 +1,1753 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Home Title{% endblock %}
+
+{% block body %}
+    <div id="container" style="min-height: 100%; position: relative; ">
+    <div class="container" style="padding-left: 0px; padding-right: 0px; padding-bottom: 40px;">
+    <div class="row" style="width: 95%; margin: auto;">
+
+    <div>
+        <div class="row" id="header_tab" style="text-align: center; font-size: 18px; background-color: #CDCDCD;">
+            <div id="search" class="col-xs-4 col-md-4 mobileBlue"
+                 style="height: 40px; margin-left:-1px; text-align: center; border-right: 1px solid white">
+
+                <div class="glyphicon" style="color:white; padding:10px 1px;">
+                    <img src="{% static 'images/munu_01.png' %}" style="height:20px;margin-top:-5px;">
+                </div>
+                <span style="font-weight:bold; color:white">조회</span>
+            </div>
+            <div id="reserve" class="col-xs-4 col-md-4"
+                 style="height: 40px; color: #858585;  margin-left: -1px; text-align: center; border-right: 1px solid white;">
+
+                <div class="glyphicon" style="color:white; padding:10px 1px;">
+                    <img src="{% static 'images/munu_02.png' %}" style="height:20px;margin-top:-5px;">
+                </div>
+                <span style="font-weight:bold; color:white">예약</span>
+            </div>
+            <div id="confirm" class="col-xs-4 col-md-4" style="height: 40px; color: #858585; text-align: center">
+
+                <div class="glyphicon" style="color:white; padding:10px 1px;">
+                    <img src="{% static 'images/munu_03.png' %}" style="height:20px;margin-top:-5px;">
+                </div>
+                <span style="font-weight:bold; color:white">확인</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8 col-md-8" style="text-align:left;">
+            <h3 style="margin-left:10px; margin-top:10px;padding-top: 9px;padding-bottom: 9px;"><img
+                    src="{% static 'images/front_img.png' %}" style="width:15px;">도서관</h3>
+        </div>
+        <div class="col-xs-4 col-md-4"
+             style="margin-top:10px; text-align: center; padding-left: 0px;padding-right: 0px;">
+            <input id="opcl_btn" class="btn btn-default" type="button" style="padding: 5px 10px 5px 10px;" value="운영">
+            <input id="holi_btn" class="btn btn-default" type="button" style="padding: 5px 10px 5px 10px;" value="휴관">
+        </div>
+    </div>
+
+    <div class="row"
+         style="border-top:1px black solid;border-bottom:1px black solid; padding-bottom: 10px; padding-top: 10px; margin-bottom:10px;">
+        <div class="col-xs-4 col-md-4" style="text-align: center; padding-left: 0px;padding-right: 0px;">
+            <div style="width: 90px; height: 90px; margin: auto;">
+                <div id="seatinfobox"
+                     style="width: 85px; height: 85px; margin: auto; background-color: #bcbcbc; display: table-cell; vertical-align: middle;">
+                    <canvas width="85" height="85"></canvas>
+                    <img alt="Scan me!" style="display: none;"></div>
+            </div>
+            <span id="seatUseTypeName" style="font-size:12px;"></span>
+        </div>
+        <div class="col-xs-8 col-md-8" style="border-bottom:1px black dotted; padding:10px 0px 10px 0px;">
+            <div id="notReserve" style="width: 100%; display: inline-block;">
+                <div style="text-align: left; padding-left: 0px;padding-right: 0px;">
+                    <h6 style="margin:0px;">좌석정보</h6>
+                    <h5 id="roomName1" style="margin: 0px; padding: 0px; color: #4470be; font-weight:bold;">선택(예약)된 좌석이
+                        없습니다.</h5>
+                </div>
+            </div>
+            <div id="inReserve" style="width: 100%; display: none;">
+                <div class="col-xs-6 col-md-6" style="padding:0px;">
+                    <div style="text-align: left; padding-left: 0px;padding-right: 0px;">
+                        <h6 style="margin:0px;">좌석정보</h6>
+                        <h5 id="roomName" style="margin: 0px; padding: 0px; color: #4470be; font-weight:bold;"></h5>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-6" style="text-align:right;">
+                    <h3 id="seatName" style="margin: 0px; padding: 0px; font-weight:bold;"></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8 col-md-8" style=" padding:10px 0px 10px 0px;">
+            <div class="col-xs-6 col-md-6" style="padding: 0px;">
+                <div>
+                    <span id="startend_time" style="font-weight: bold; padding: 2px 0px 2px 0px;"></span>
+                    <span id="extendCnt"
+                          style="border: 1px gray solid; color: white; font-size: 10px; background-color: #367919; border-radius: 2px; padding: 2px 2px 2px 2px; display: none;">연장1회</span>
+                    <span id="outtime"
+                          style="border: 1px gray solid; color: white; font-size: 10px; background-color: #ba1a41; border-radius: 2px; padding: 2px 2px 2px 2px; display: none; ">외출10:30</span>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-6" style="padding: 0px; text-align:center;">
+                <div>
+                    <input id="extend_btn" class="btn btn-default" type="button"
+                           style="padding: 5px 10px 5px 10px; display: none; border-color: #4470be; color: #4470be; "
+                           value="연장">
+                    <input id="return_btn" class="btn btn-default" type="button"
+                           style="padding: 5px 10px 5px 10px; display: none; border-color: #ca324b; color: #ca324b; "
+                           value="반납">
+                    <input id="cancel_btn" class="btn btn-danger" type="button"
+                           style="padding: 5px 10px 5px 10px; background-color: #cc324b; display: none;" value="예약취소">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div style="text-align: right; width:100%;">
+        <span id="extendLimitTime" style="font-size: 12px; padding: 2px 0px; display: none; color:red;"></span>
+    </div>
+
+
+    <div class="row" id="responsecontainer" style="text-align: center; margin: 0px 0px 0px 5px;">
+
+    <div class="col-xs-12 col-md-6" style="text-align: center; padding-left: 2px; padding-right: 2px;">
+    <div class="panel panel-default" style="border-color:#4470be;">
+    <div class="panel-body">
+    <table style="width:100%">
+        <tbody>
+        <tr>
+            <td style="width: 60%; text-align: left; color: #4470be; font-weight:bold;">4층 남자열람실</td>
+            <td style="width: 30%; text-align: right; padding-right:4px;"><span id="s1"
+                                                                                style="color:green">62</span>/<span
+                    style="color:black">90</span></td>
+            <td style="width: 10%; text-align: center;"><input class="btn btn-default btnGreen" type="button" name="1"
+                                                               value="예약" style="color: white;"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="seating-format" style="display: none; width:100%; height:170px;" id="1">
+    <table style="margin: auto; border-collapse: separate; border-spacing: 1px; table-layout: fixed;" id="r1">
+    <tbody>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    <div style="width:95%; height:30px; border-top:1px #6166a0 solid; margin:auto" class="seats" rm="1">
+        <img src="{% static 'images/open_02.png' %}" style="padding-top:5px;" id="i1">
+    </div>
+    </div>
+    </div>
+    <div class="col-xs-12 col-md-6" style="text-align: center; padding-left: 2px; padding-right: 2px;">
+    <div class="panel panel-default" style="border-color:#4470be;">
+    <div class="panel-body">
+    <table style="width:100%">
+        <tbody>
+        <tr>
+            <td style="width: 60%; text-align: left; color: #4470be; font-weight:bold;">4층 여자열람실</td>
+            <td style="width: 30%; text-align: right; padding-right:4px;"><span id="s2"
+                                                                                style="color:green">45</span>/<span
+                    style="color:black">90</span></td>
+            <td style="width: 10%; text-align: center;"><input class="btn btn-default btnGreen" type="button" name="2"
+                                                               value="예약" style="color: white;"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="seating-format" style="display: none; width:100%; height:170px;" id="2">
+    <table style="margin: auto; border-collapse: separate; border-spacing: 1px; table-layout: fixed;" id="r2">
+    <tbody>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(153, 204, 0);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    <tr>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(171, 202, 220);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width:10px; min-height: 7px; height:10px;"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+        <td style="min-width: 7px; width: 10px; min-height: 7px; height: 10px; background-color: rgb(255, 153, 254);"
+            class="seat_td"></td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    <div style="width:95%; height:30px; border-top:1px #6166a0 solid; margin:auto" class="seats" rm="2">
+        <img src="{% static 'images/open_02.png' %}" style="padding-top:5px;" id="i2">
+    </div>
+    </div>
+    </div>
+
+    </div>
+    <script type="text/javascript">
+
+    // QR코드 생성
+    var oQRCode = new QRCode($('#seatinfobox')[0], {
+        text: "",
+        width: 85,
+        height: 85
+    });
+
+    //사용자정보 조회
+    function getUserInfo() {
+        var sessionId = $("#SessionID").val();
+        // 이용자예약관련 정보 취득
+        $.ajax({
+            "url": url_list.GetUser,
+            "data": { 'sessionId': sessionId },
+            "dataType": "jsonp",
+            "success": function (data) {
+                console.log(data);
+                if (data.success == "true") {
+                    // 미사용일경우
+                    if (data.userStatus == "0" || data.userStatus == "") {
+                        $('#notReserve').css({ "display": "inline-block" });
+                        $('#inReserve').css({ "display": "none" });
+
+                        $('#extend_btn').css({ "display": "none" });
+                        $('#return_btn').css({ "display": "none" });
+                        $('#cancel_btn').css({ "display": "none" });
+                        $('#extendLimitTime').css({ "display": "none" });
+
+
+                        if (reserveFlag) {
+                            $('#roomName1').html("선택(예약)된 좌석이 없습니다.");
+                            $(".btn.btn-default.btnGreen").attr("disabled", false);
+                            $(".btn.btn-default.btnGreen").css({ "color": "white" });
+                        }
+                        else {
+                            $('#roomName1').html("사용중 좌석이 없습니다.");
+                            $(".btn.btn-default.btnGreen").css({ "display": "none" });
+                        }
+                    }
+                    else if (data.userStatus == "1") //발권
+                    {
+                        $(".btn.btn-default.btnGreen").attr("disabled", true);
+                        $(".btn.btn-default.btnGreen").css({ "color": "black" });
+
+                        $('#notReserve').css({ "display": "none" });
+                        $('#inReserve').css({ "display": "inline-block" });
+
+                        $('#extend_btn').css({ "display": "inline-block" });
+                        $('#return_btn').css({ "display": "inline-block" });
+                        $('#cancel_btn').css({ "display": "none" });
+
+                        $('#roomName').html(data.roomName);
+                        $('#seatName').html(data.seatName);
+                        $('#seatUseTypeName').html(data.seatTypeName);
+
+                        var reserveNo = data.TicketID;
+
+                        oQRCode.clear();    //QR코드 삭제
+                        oQRCode.makeCode(reserveNo);    //QR코드 재생성
+
+                        var start_hh = data.seatStartTime.substring(8, 10);
+                        var start_mm = data.seatStartTime.substring(10, 12);
+                        var end_hh = data.seatEndTime.substring(8, 10);
+                        var end_mm = data.seatEndTime.substring(10, 12);
+
+                        var extendCnt = data.extendCnt;
+                        var extendLimitCnt = data.extendLimitCnt;
+
+                        var limit_hh = data.extendLimitTime.substring(8, 10);
+                        var limit_mm = data.extendLimitTime.substring(10, 12);
+
+                        $('#extendCnt').html("연장" + extendCnt + "/" + extendLimitCnt + "회");
+                        $('#extendCnt').css({ "display": "inline-block" });
+
+                        $('#startend_time').html(start_hh + ':' + start_mm + " ~ " + end_hh + ':' + end_mm);
+                        if (extendCnt != extendLimitCnt) {
+                            $('#extendLimitTime').html(limit_hh + ':' + limit_mm + "부터 연장 가능합니다.");
+                            $('#extendLimitTime').css({ "display": "inline-block" });
+                        }
+                    }
+                    else if (data.userStatus == "2") //외출중
+                    {
+                        $(".btn.btn-default.btnGreen").attr("disabled", true);
+                        $(".btn.btn-default.btnGreen").css({ "color": "black" });
+
+                        $('#notReserve').css({ "display": "none" });
+                        $('#inReserve').css({ "display": "inline-block" });
+
+                        $('#extend_btn').css({ "display": "none" });
+                        $('#return_btn').css({ "display": "inline-block" });
+                        $('#cancel_btn').css({ "display": "none" });
+
+                        $('#roomName').html(data.roomName);
+                        $('#seatName').html(data.seatName);
+                        $('#seatUseTypeName').html(data.seatTypeName);
+
+                        var reserveNo = data.TicketID;
+
+                        oQRCode.clear();    //QR코드 삭제
+                        oQRCode.makeCode(reserveNo);    //QR코드 재생성
+
+                        var start_hh = data.seatStartTime.substring(8, 10);
+                        var start_mm = data.seatStartTime.substring(10, 12);
+                        var end_hh = data.seatEndTime.substring(8, 10);
+                        var end_mm = data.seatEndTime.substring(10, 12);
+
+                        $('#startend_time').html(start_hh + ':' + start_mm + " ~ " + end_hh + ':' + end_mm);
+
+                        //연장
+                        var extendCnt = data.extendCnt;
+                        var extendLimitCnt = data.extendLimitCnt;
+
+                        $('#extendCnt').html("연장" + extendCnt + "/" + extendLimitCnt + "회");
+                        $('#extendCnt').css({ "display": "inline-block" });
+
+                        //외출시분
+                        var out_hh = data.goOutTime.substring(8, 10);
+                        var out_mm = data.goOutTime.substring(10, 12);
+
+                        $('#outtime').html("외출" + out_hh + ":" + out_mm);
+                        $('#outtime').css({ "display": "inline-block" });
+
+                    }
+                    else if (data.userStatus == "3") //예약중
+                    {
+                        $(".btn.btn-default.btnGreen").attr("disabled", true);
+                        $(".btn.btn-default.btnGreen").css({ "color": "black" });
+
+                        $('#notReserve').css({ "display": "none" });
+                        $('#inReserve').css({ "display": "inline-block" });
+
+                        $('#extend_btn').css({ "display": "none" });
+                        $('#return_btn').css({ "display": "none" });
+                        $('#cancel_btn').css({ "display": "inline-block" });
+
+                        $('#roomName').html(data.roomName);
+                        $('#seatName').html(data.seatName);
+                        $('#seatUseTypeName').html(data.seatTypeName);
+
+                        var reserveNo = data.TicketID;
+
+                        oQRCode.clear();    //QR코드 삭제
+                        oQRCode.makeCode(reserveNo);    //QR코드 재생성
+
+                        var start_hh = data.reserveTime.substring(8, 10);
+                        var start_mm = data.reserveTime.substring(10, 12);
+                        var end_hh = data.reserveExpireTime.substring(8, 10);
+                        var end_mm = data.reserveExpireTime.substring(10, 12);
+
+                        $('#startend_time').html(start_hh + ':' + start_mm + " ~ " + end_hh + ':' + end_mm);
+                    }
+                    else {
+                        $(".btn.btn-default.btnGreen").attr("disabled", true);
+                        $(".btn.btn-default.btnGreen").css({ "color": "black" });
+
+                        $('#extend_btn').css({ "display": "inline-block" });
+                        $('#return_btn').css({ "display": "inline-block" });
+                        $('#cancel_btn').css({ "display": "none" });
+
+                        $('#roomName').html(data.roomName);
+                        $('#seatName').html(data.seatName);
+                        $('#seatUseTypeName').html(data.seatTypeName);
+
+                        var reserveNo = data.TicketID;
+
+                        oQRCode.clear();    //QR코드 삭제
+                        oQRCode.makeCode(reserveNo);    //QR코드 재생성
+
+                        var start_hh = data.reserveTime.substring(8, 10);
+                        var start_mm = data.reserveTime.substring(10, 12);
+                        var end_hh = data.reserveExpireTime.substring(8, 10);
+                        var end_mm = data.reserveExpireTime.substring(10, 12);
+
+                        $('#startend_time').html(start_hh + ':' + start_mm + " ~ " + end_hh + ':' + end_mm);
+                    }
+                }
+                else {
+                    bootbox.alert(getError(data.message));
+                    var url = '/Account/Login';
+                    window.location.href = url;
+                }
+            },
+            "error": function (jqXHR, textStatus, errorThrown) {
+                var url = '/Account/Login';
+                window.location.href = url;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        var c = $("canvas").get();
+        var ctx = c[0].getContext('2d');
+        ctx.font = "20px 나눔고딕";
+        ctx.fillStyle = 'white';
+        ctx.fillText("QR코드", 10, 50);
+
+        // 로그아웃버튼
+        $('#logout_btn').click(function () {
+            var url = '/Account/Login';
+            window.location.href = url;
+        });
+        // 홈버튼
+        $('#home_btn').click(function () {
+            var url = 'http://192.168.0.17:5000/';
+            window.location.href = url;
+        });
+
+        //사용자정보 조회
+        getUserInfo();
+
+        //최초 좌석 배치
+        var seats = (function () {
+            return [
+                {"ROOM_NO": 1, "SEAT_NAME": "1", "NUMBER": 1, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12101812061085", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "2", "NUMBER": 2, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "3", "NUMBER": 3, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "4", "NUMBER": 4, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "5", "NUMBER": 5, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 8, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": "M", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "6", "NUMBER": 6, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "12", "NUMBER": 12, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "11", "NUMBER": 11, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "10", "NUMBER": 10, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "9", "NUMBER": 9, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "8", "NUMBER": 8, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 8, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "7", "NUMBER": 7, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "13", "NUMBER": 13, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "14", "NUMBER": 14, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": "M", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "15", "NUMBER": 15, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": "M", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "16", "NUMBER": 16, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "20", "NUMBER": 20, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "19", "NUMBER": 19, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "18", "NUMBER": 18, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "17", "NUMBER": 17, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "21", "NUMBER": 21, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "30", "NUMBER": 30, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "31", "NUMBER": 31, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "40", "NUMBER": 40, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "41", "NUMBER": 41, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415000987", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "22", "NUMBER": 22, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "29", "NUMBER": 29, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "32", "NUMBER": 32, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "39", "NUMBER": 39, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "42", "NUMBER": 42, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "23", "NUMBER": 23, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "28", "NUMBER": 28, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "33", "NUMBER": 33, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "38", "NUMBER": 38, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "43", "NUMBER": 43, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "24", "NUMBER": 24, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "27", "NUMBER": 27, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "34", "NUMBER": 34, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "37", "NUMBER": 37, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "44", "NUMBER": 44, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "25", "NUMBER": 25, "SEAT_USAGE": "1", "X_POS": 13, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "26", "NUMBER": 26, "SEAT_USAGE": "1", "X_POS": 13, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "35", "NUMBER": 35, "SEAT_USAGE": "1", "X_POS": 13, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "36", "NUMBER": 36, "SEAT_USAGE": "1", "X_POS": 13, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "45", "NUMBER": 45, "SEAT_USAGE": "1", "X_POS": 13, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "82", "NUMBER": 82, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12602414077110", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "81", "NUMBER": 81, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415001772", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "64", "NUMBER": 64, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "63", "NUMBER": 63, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "46", "NUMBER": 46, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12101813005385", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "83", "NUMBER": 83, "SEAT_USAGE": "1", "X_POS": 16, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "80", "NUMBER": 80, "SEAT_USAGE": "1", "X_POS": 16, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "65", "NUMBER": 65, "SEAT_USAGE": "1", "X_POS": 16, "Y_POS": 5, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12613413004070", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "62", "NUMBER": 62, "SEAT_USAGE": "1", "X_POS": 16, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "47", "NUMBER": 47, "SEAT_USAGE": "1", "X_POS": 16, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415000015", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "84", "NUMBER": 84, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "79", "NUMBER": 79, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "66", "NUMBER": 66, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "61", "NUMBER": 61, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "48", "NUMBER": 48, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12100312003032", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "85", "NUMBER": 85, "SEAT_USAGE": "1", "X_POS": 19, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "78", "NUMBER": 78, "SEAT_USAGE": "1", "X_POS": 19, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "67", "NUMBER": 67, "SEAT_USAGE": "1", "X_POS": 19, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "60", "NUMBER": 60, "SEAT_USAGE": "1", "X_POS": 19, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "49", "NUMBER": 49, "SEAT_USAGE": "1", "X_POS": 19, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "86", "NUMBER": 86, "SEAT_USAGE": "1", "X_POS": 20, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12101811005600", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "77", "NUMBER": 77, "SEAT_USAGE": "1", "X_POS": 20, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415000677", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "68", "NUMBER": 68, "SEAT_USAGE": "1", "X_POS": 20, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "59", "NUMBER": 59, "SEAT_USAGE": "1", "X_POS": 20, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "50", "NUMBER": 50, "SEAT_USAGE": "1", "X_POS": 20, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12102614006065", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "87", "NUMBER": 87, "SEAT_USAGE": "1", "X_POS": 22, "Y_POS": 2, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "76", "NUMBER": 76, "SEAT_USAGE": "1", "X_POS": 22, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12102613022411", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "69", "NUMBER": 69, "SEAT_USAGE": "1", "X_POS": 22, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "58", "NUMBER": 58, "SEAT_USAGE": "1", "X_POS": 22, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415001691", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "51", "NUMBER": 51, "SEAT_USAGE": "1", "X_POS": 22, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12602413012457", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "88", "NUMBER": 88, "SEAT_USAGE": "1", "X_POS": 23, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12101813008198", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "75", "NUMBER": 75, "SEAT_USAGE": "1", "X_POS": 23, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "70", "NUMBER": 70, "SEAT_USAGE": "1", "X_POS": 23, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "57", "NUMBER": 57, "SEAT_USAGE": "1", "X_POS": 23, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12602414011854", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "52", "NUMBER": 52, "SEAT_USAGE": "1", "X_POS": 23, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415000150", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "89", "NUMBER": 89, "SEAT_USAGE": "1", "X_POS": 25, "Y_POS": 2, "USE_TYPE": 3, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": null, "USER_ID": "12101511000795", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "74", "NUMBER": 74, "SEAT_USAGE": "1", "X_POS": 25, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "71", "NUMBER": 71, "SEAT_USAGE": "1", "X_POS": 25, "Y_POS": 5, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 1, "SEAT_NAME": "56", "NUMBER": 56, "SEAT_USAGE": "1", "X_POS": 25, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12101911063986", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "53", "NUMBER": 53, "SEAT_USAGE": "1", "X_POS": 25, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415000360", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "90", "NUMBER": 90, "SEAT_USAGE": "1", "X_POS": 26, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12102612029303", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "73", "NUMBER": 73, "SEAT_USAGE": "1", "X_POS": 26, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12613415012800", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "72", "NUMBER": 72, "SEAT_USAGE": "1", "X_POS": 26, "Y_POS": 5, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415001523", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "55", "NUMBER": 55, "SEAT_USAGE": "1", "X_POS": 26, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12614415000373", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 1, "SEAT_NAME": "54", "NUMBER": 54, "SEAT_USAGE": "1", "X_POS": 26, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "M", "USER_ID": "12101308011930", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "1", "NUMBER": 1, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000370", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "2", "NUMBER": 2, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "3", "NUMBER": 3, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "4", "NUMBER": 4, "SEAT_USAGE": "1", "X_POS": 2, "Y_POS": 10, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12100515017804", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "8", "NUMBER": 8, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000710", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "7", "NUMBER": 7, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 7, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000717", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "6", "NUMBER": 6, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "5", "NUMBER": 5, "SEAT_USAGE": "1", "X_POS": 3, "Y_POS": 10, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "9", "NUMBER": 9, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "10", "NUMBER": 10, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 4, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "11", "NUMBER": 11, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "12", "NUMBER": 12, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "13", "NUMBER": 13, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "14", "NUMBER": 14, "SEAT_USAGE": "1", "X_POS": 5, "Y_POS": 10, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "20", "NUMBER": 20, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001875", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "19", "NUMBER": 19, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 4, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "18", "NUMBER": 18, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12602312000315", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "17", "NUMBER": 17, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "16", "NUMBER": 16, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "15", "NUMBER": 15, "SEAT_USAGE": "1", "X_POS": 6, "Y_POS": 10, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "21", "NUMBER": 21, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12613414020931", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "22", "NUMBER": 22, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 4, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "23", "NUMBER": 23, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "24", "NUMBER": 24, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "25", "NUMBER": 25, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "26", "NUMBER": 26, "SEAT_USAGE": "1", "X_POS": 8, "Y_POS": 10, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "32", "NUMBER": 32, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000393", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "31", "NUMBER": 31, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 4, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "30", "NUMBER": 30, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "29", "NUMBER": 29, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "28", "NUMBER": 28, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "27", "NUMBER": 27, "SEAT_USAGE": "1", "X_POS": 9, "Y_POS": 10, "USE_TYPE": 0, "SEAT_TYPE": 2, "SEAT_COLOR": "#99cc00", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "33", "NUMBER": 33, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000376", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "34", "NUMBER": 34, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "35", "NUMBER": 35, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 4, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "36", "NUMBER": 36, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12613415009917", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "37", "NUMBER": 37, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 7, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000052", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "38", "NUMBER": 38, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 8, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "39", "NUMBER": 39, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "40", "NUMBER": 40, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 12, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "41", "NUMBER": 41, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 13, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "42", "NUMBER": 42, "SEAT_USAGE": "1", "X_POS": 11, "Y_POS": 14, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "52", "NUMBER": 52, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000019", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "51", "NUMBER": 51, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "50", "NUMBER": 50, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 4, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000245", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "49", "NUMBER": 49, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "48", "NUMBER": 48, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "47", "NUMBER": 47, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 8, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001759", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "46", "NUMBER": 46, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "45", "NUMBER": 45, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 12, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "44", "NUMBER": 44, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 13, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "43", "NUMBER": 43, "SEAT_USAGE": "1", "X_POS": 12, "Y_POS": 14, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001953", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "53", "NUMBER": 53, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000624", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "54", "NUMBER": 54, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 3, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "55", "NUMBER": 55, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 4, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415002017", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "56", "NUMBER": 56, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 6, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "57", "NUMBER": 57, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 7, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "58", "NUMBER": 58, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 8, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "59", "NUMBER": 59, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001059", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "60", "NUMBER": 60, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 12, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "61", "NUMBER": 61, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 13, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "62", "NUMBER": 62, "SEAT_USAGE": "1", "X_POS": 14, "Y_POS": 14, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000401", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "72", "NUMBER": 72, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 2, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102612015301", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "71", "NUMBER": 71, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415002008", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "70", "NUMBER": 70, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 4, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102611003062", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "69", "NUMBER": 69, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12100811000385", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "68", "NUMBER": 68, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 7, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001962", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "67", "NUMBER": 67, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 8, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "66", "NUMBER": 66, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 9, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": " ", "USER_ID": "", "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "65", "NUMBER": 65, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 12, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "64", "NUMBER": 64, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 13, "USE_TYPE": 0, "SEAT_TYPE": 1, "SEAT_COLOR": "#abcadc", "USER_SEX": null, "USER_ID": null, "USE_HOUR": 4, "EXTEND_LIMIT_CNT": 4, "EXTEND_LIMIT_TIME": 60},
+                {"ROOM_NO": 2, "SEAT_NAME": "63", "NUMBER": 63, "SEAT_USAGE": "1", "X_POS": 15, "Y_POS": 14, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000347", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "73", "NUMBER": 73, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000258", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "74", "NUMBER": 74, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 4, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12613415003392", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "75", "NUMBER": 75, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12613415012135", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "76", "NUMBER": 76, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 7, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12602311000217", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "77", "NUMBER": 77, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 8, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000235", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "78", "NUMBER": 78, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102614009710", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "79", "NUMBER": 79, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 12, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000153", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "80", "NUMBER": 80, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 13, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001223", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "81", "NUMBER": 81, "SEAT_USAGE": "1", "X_POS": 17, "Y_POS": 14, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102613013186", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "90", "NUMBER": 90, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 3, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12613414032070", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "89", "NUMBER": 89, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 4, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12613415005763", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "88", "NUMBER": 88, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 6, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000833", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "87", "NUMBER": 87, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 7, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415001754", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "86", "NUMBER": 86, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 8, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102613000030", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "85", "NUMBER": 85, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 9, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102612022319", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "84", "NUMBER": 84, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 12, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12100813064244", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "83", "NUMBER": 83, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 13, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12102612004854", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null},
+                {"ROOM_NO": 2, "SEAT_NAME": "82", "NUMBER": 82, "SEAT_USAGE": "1", "X_POS": 18, "Y_POS": 14, "USE_TYPE": 1, "SEAT_TYPE": 10, "SEAT_COLOR": "#ff99fe", "USER_SEX": "F", "USER_ID": "12614415000803", "USE_HOUR": null, "EXTEND_LIMIT_CNT": null, "EXTEND_LIMIT_TIME": null}
+            ]
+        })();
+
+        var cnt = seats.length;
+
+        for (var i = 0; i < cnt; i++) {
+            var tids = "#r" + seats[i]["ROOM_NO"];
+            var ttrids = "#r" + seats[i]["ROOM_NO"] + " tr";
+            var xpos = seats[i]["X_POS"];
+            var ypos = seats[i]["Y_POS"];
+            var bgcolor = seats[i]["SEAT_COLOR"];
+
+            $(tids).find("tr:eq(" + ypos + ")").find("td:eq(" + xpos + ")").css({ "background-color": bgcolor });
+            $(tids).find("tr:eq(" + ypos + ")").find("td:eq(" + xpos + ")").addClass("seat_td");
+        }
+
+        // 최초 테이블 크기 설정
+        var width = $(document).width();
+
+        $("table[id^='r']").each(function () {
+            var tdwidth = $("#" + this.id + ' tr:nth-child(2)' + ' td').length * 12;
+            if (tdwidth > width) {
+                $("#" + this.id + ' tr' + ' td').each(function () {
+                    $(this).css({ 'width': '7px', "height": "7px" });
+                });
+            }
+            else {
+                $("#" + this.id + ' tr' + ' td').each(function () {
+                    $(this).css({ 'width': '10px', "height": "10px" });
+                });
+            }
+        });
+    });
+
+    // 화면 갱신(이용자상태 변경)
+    var refresh_interval = setInterval(function () {
+        //사용자정보 조회
+        getUserInfo();
+    }, 5000);
+
+    // 화면 갱신(사용인원 변경)
+    var refresh_interval = setInterval(function () {
+        $.ajax({
+            type: "POST",
+            data: {},
+            url: "/Home/getRefreshDataRoom",
+            success: function (data) {
+                console.log(data);
+                var cnt = data.Result.length;
+                for (var i = 0; i < cnt; i++) {
+                    var sids = "#s" + data.Result[i].room_no;
+                    var ttn = data.Result[i].total_num;
+                    var usen = data.Result[i].used;
+                    var unused = ttn - usen;
+
+                    $(sids).html(unused);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+
+    }, 5000);
+
+    // 화면 갱신(좌석 상태 변경)
+    var refresh_interval = setInterval(function () {
+        $.ajax({
+            type: "POST",
+            data: {},
+            url: "/Home/getRefreshData",
+            success: function (data) {
+
+                var cnt = data.Result.length;
+                for (var i = 0; i < cnt; i++) {
+                    var tids = "#r" + data.Result[i]["ROOM_NO"];
+                    var ttrids = "#r" + data.Result[i]["ROOM_NO"] + " tr";
+                    var xpos = data.Result[i]["X_POS"];
+                    var ypos = data.Result[i]["Y_POS"];
+                    var bgcolor = data.Result[i]["SEAT_COLOR"];
+
+                    $(tids).find("tr:eq(" + ypos + ")").find("td:eq(" + xpos + ")").css({ "background-color": bgcolor });
+
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+
+    }, 5000);
+
+    // 좌석조회 클릭
+    $("#btn_seatsearch").click(function (e) {
+        if ($('.seating-format').css('display') == "none") {
+            $('.seating-format').css({ "display": "inline-block" });
+            $('#btn_glyphicon').removeClass('glyphicon-chevron-down');
+            $('#btn_glyphicon').addClass('glyphicon-chevron-up');
+        }
+        else {
+            $('.seating-format').css({ "display": "none" });
+            $('#btn_glyphicon').addClass('glyphicon-chevron-down');
+            $('#btn_glyphicon').removeClass('glyphicon-chevron-up');
+        }
+        return;
+    });
+
+    // 좌석조회 클릭
+    $(".seats").click(function (e) {
+        var rm = $(this).attr("rm");
+        if ($("#" + rm).css('display') == "none") {
+            $("#" + rm).css({ "display": "inline-block" });
+            //$(this).css({ "background-color": "#4470be" });
+            $("#i" + rm).attr("src", "{% static 'images/close_02.png' %}");
+
+        } else {
+            $("#" + rm).css({ "display": "none" });
+            // $(this).css({ "background-color": "#bcbcbc" });
+            $("#i" + rm).attr("src", "{% static 'images/open_02.png' %}");
+        }
+        return;
+    });
+
+    // 예약버튼 클릭
+    $('.btn.btn-default.btnGreen').click(function (e) {
+        var url = '/Home/SeatFormat?room_no=' + this.name;
+        window.location.href = url;
+    });
+
+    // 연장버튼 클릭
+    $('#extend_btn').click(function (e) {
+        var sessionId = $("#SessionID").val();
+
+        var confirmOptions = {
+            title: "",
+            message: "연장 하시겠습니까?",
+            buttons: {
+                confirm: {
+                    label: "예"
+                },
+                cancel: {
+                    label: "아니오"
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        "url": url_list.DoExtend,
+                        "data": { 'sessionId': sessionId },
+                        "dataType": "jsonp",
+                        "success": function (data) {
+                            if (data.success == "true") {
+                                var start_hh = data.seatStartTime.substring(8, 10);
+                                var start_mm = data.seatStartTime.substring(10, 12);
+                                var end_hh = data.seatEndTime.substring(8, 10);
+                                var end_mm = data.seatEndTime.substring(10, 12);
+
+                                var extendCnt = data.extendCnt;
+                                var extendLimitCnt = data.extendLimitCnt;
+
+                                $('#extendCnt').html("연장" + extendCnt + "/" + extendLimitCnt + "회");
+                                $('#extendCnt').css({ "display": "inline-block" });
+
+                                $('#startend_time').html(start_hh + ':' + start_mm + " ~ " + end_hh + ':' + end_mm);
+                            }
+                            else {
+                                bootbox.alert(getError(data.message));
+                            }
+                        },
+                        "error": function (jqXHR, textStatus, errorThrown) {
+
+                        }
+                    });
+                } else {
+                    return;
+                }
+            }
+        }
+
+        bootbox.confirm(confirmOptions);
+
+    });
+
+    // 반납버튼 클릭
+    $('#return_btn').click(function (e) {
+        var sessionId = $("#SessionID").val();
+
+        var confirmOptions = {
+            title: "",
+            message: "반납 하시겠습니까?",
+            buttons: {
+                confirm: {
+                    label: "예"
+                },
+                cancel: {
+                    label: "아니오"
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        "url": url_list.DoReturn,
+                        "data": { 'sessionId': sessionId },
+                        "dataType": "jsonp",
+                        "success": function (data) {
+                            if (data.success == "true") {
+                                //$('#notReserve').css({ "display": "inline-block" });
+                                //$('#inReserve').css({ "display": "none" });
+
+                                //$('#extend_btn').css({ "display": "none" });
+                                //$('#return_btn').css({ "display": "none" });
+                                //$('#cancel_btn').css({ "display": "none" });
+
+                                //$('#roomName1').html("선택(예약)된 좌석이 없습니다.");
+
+                                //$('#extendCnt').css({ "display": "none" });
+                                //$('#startend_time').html("");
+
+                                //$(".btn.btn-default.btnGreen").attr("disabled", false);
+                                //$(".btn.btn-default.btnGreen").css({ "color": "white" });
+
+                                //oQRCode.clear();    //QR코드 삭제
+                                //$('#extendCnt').css({ "display": "none" });
+
+
+                                bootbox.alert(getError("반납 하였습니다."));
+
+                                var url = '/Home/Index';
+                                window.location.href = url;
+                            }
+                            else {
+                                bootbox.alert(getError(data.message));
+                            }
+                        },
+                        "error": function (jqXHR, textStatus, errorThrown) {
+
+                        }
+                    });
+                } else {
+                    return;
+                }
+            }
+        }
+
+        bootbox.confirm(confirmOptions);
+
+    });
+
+    // 예약취소버튼 클릭
+    $('#cancel_btn').click(function () {
+        var sessionId = $("#SessionID").val();
+        var confirmOptions = {
+            title: "",
+            message: "예약을 취소하시겠습니까?",
+            buttons: {
+                confirm: {
+                    label: "예"
+                },
+                cancel: {
+                    label: "아니오"
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        "url": url_list.DoReserveCancel,
+                        "data": { 'sessionId': sessionId },
+                        "dataType": "jsonp",
+                        "success": function (data) {
+                            if (data.success == "true") {
+
+                                bootbox.alert(getError("예약을 취소하였습니다."));
+                                var url = '/Home/Index';
+                                window.location.href = url;
+
+                            }
+                            else {
+                                bootbox.alert(getError(data.message));
+                            }
+                        },
+                        "error": function (jqXHR, textStatus, errorThrown) {
+
+                        }
+                    });
+                } else {
+                    return;
+                }
+            }
+        }
+
+        bootbox.confirm(confirmOptions);
+    });
+
+    // 운영버튼 클릭
+    $('#opcl_btn').click(function (e) {
+        bootbox.alert(getError("운영시간 : 06:59 ~ 00:01"));
+    });
+
+    // 휴관버튼 클릭
+    $('#holi_btn').click(function (e) {
+        bootbox.alert(getError("휴관일 : 매주 금요일"));
+    });
+
+    // 화면 리사이즈 이벤트
+    $(window).on("orientationchange resize", function (event) {
+        var width = $(document).width();
+
+        $("table[id^='r']").each(function () {
+            var tdwidth = $("#" + this.id + ' tr:nth-child(2)' + ' td').length * 12;
+            if (tdwidth > width) {
+                $("#" + this.id + ' tr' + ' td').each(function () {
+                    //console.log($(this).css("height"));
+                    $(this).css({ 'width': '7px', "height": "7px" });
+                });
+            }
+            else {
+                $("#" + this.id + ' tr' + ' td').each(function () {
+                    $(this).css({ 'width': '10px', "height": "10px" });
+                });
+            }
+        });
+    });
+    </script>
+
+
+    </div>
+    </div>
+    <footer style="bottom: 0px; height: 40px; background-color: #353840; text-align: center; padding-top: 5px;">
+
+        <a id="logout_btn" class="bottom_button">로그아웃</a>
+    </footer>
+
+    </div>
+
+
+
+
+    <script src="{% static 'js/jquery-1.9.1.js' %}"></script>
+    <script src="{% static 'js/jquery-1.9.1.min.map' %}"></script>
+    <script>
+        $(document).on("mobileinit", function () {
+            $.mobile.ajaxEnabled = false;
+        });
+
+        function FindBootstrapEnvironment() {
+            var object = {};
+
+            function FindBootstrapEnvironment() {
+                var envs = ["xs", "sm", "md", "lg"],
+                        doc = window.document,
+                        temp = doc.createElement("div");
+
+                doc.body.appendChild(temp);
+
+                for (var i = envs.length - 1; i >= 0; i--) {
+                    var env = envs[i];
+
+                    temp.className = "hidden-" + env;
+
+                    if (temp.offsetParent === null) {
+                        doc.body.removeChild(temp);
+                        return env;
+                    }
+                }
+                return "";
+            }
+        }
+        if (FindBootstrapEnvironment() !== 'xs') {
+
+        } else {
+
+        }
+
+        function getError(message) {
+            var error_message = '';
+            error_message += '<h4 style="color:black; font-weight: bold;">';
+            error_message += message;
+            error_message += '</h4>';
+            return error_message;
+        }
+    </script>
+    <script type="text/javascript" src="{% static 'js/View/url_list.js' %}"></script>
+
+
+    {#    <h1>도서관 예약 시스템</h1>#}
+    {##}
+    {#    <h4>Man</h4>#}
+    {#    <ul id="id_man_room">#}
+    {#        <strong id="id_man_room_available">10</strong>/#}
+    {#        <strong id="id_man_room_total">10</strong>#}
+    {#        <a href="{% url 'man_room' %}" class="btn btn-info" role="button">예약</a>#}
+    {#    </ul>#}
+    {##}
+    {#    <h4>Woman</h4>#}
+    {#    <ul id="woman_room">#}
+    {#        <strong id="id_man_room_available">5</strong>/#}
+    {#        <strong id="id_man_room_total">10</strong>#}
+    {#        <a href="{% url 'woman_list' %}" class="btn btn-info" role="button">예약</a>#}
+    {#    </ul>#}
+{% endblock %}

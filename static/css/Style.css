@@ -1,0 +1,169 @@
+﻿/*------------------------------
+=BASIC SETUP
+------------------------------*/
+
+/* Makeshift CSS Reset */
+* {
+    font-family:나눔고딕;
+	margin: 0;
+	padding: 0;
+}
+
+/* Tell the browser to render HTML 5 elements as block */
+header, footer, section, aside, nav, article {
+	display: block;
+}
+
+body {
+	margin: 0 auto;
+	padding: 0 0;
+	/*width: 800px;*/
+	background: #FFFFFF;
+}
+
+h1, h2 {
+	font-size: 28px;
+	line-height: 44px;
+	padding: 22px 0;
+}
+
+h3 {
+	font-size: 18px;
+	line-height: 22px;
+	padding: 11px 0;
+}
+
+p {
+	padding-bottom: 22px;
+}
+
+.btnGreen{
+    background-color: #6ca216;
+    color: white;
+}
+
+.selectedBorder{
+    border: 2px yellow solid;
+}
+
+.unSelectedBorder{
+    border: 1px black solid;
+}
+.seat_td{
+    border:outset 1px #000000;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
+/*------------------------------
+=NAVIGATION
+------------------------------*/
+.mobileBlue {
+    background-color: #4470be;
+}
+
+nav {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	background-color:gray;
+}
+
+	nav ul {
+		margin: 0 auto;
+		width: 800px;
+		list-style: none;
+	}
+
+		nav ul li {
+			float: left;            
+            border-right:1px white solid;
+		}
+		
+			nav ul li a {
+				display: block;
+				margin-right: 0px;
+				width: 260px;
+				font-size: 14px;
+				line-height: 44px;
+				text-align: center;
+				text-decoration: none;
+				color:white;
+			}
+			
+				nav ul li a:hover {
+                    background-color:green;
+					color: white;
+				}
+			
+			nav ul li.selected a {
+				background-color:green;
+                color: white;
+			}
+
+/*------------------------------
+=FOOTER
+------------------------------*/
+footer {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	background: #222;
+}
+
+	footer div {
+		display: table;
+		margin: 0 auto;
+		padding: 44px 0;
+		width: 800px;
+		color: #777;
+	}
+	
+		footer div section {
+			display: table-cell;
+			width: 300px;
+		}
+		
+		footer div #about, footer div #blogroll {
+			padding-right: 20px;
+		}
+		
+	footer h3 {
+		color: #FFF;
+	}
+	
+	footer a {
+		color: #999;
+	}
+	
+		footer a:hover {
+			color: #FFF;
+			text-decoration: none;
+		}
+	
+	footer ul {
+		margin: 0 0 0 40px;
+		list-style: square;
+		color: #565656;
+	}
+	
+		footer ul li a {
+			display: block;
+		}
+
+/*------------------------------
+=button
+------------------------------*/
+.bottom_button {
+    display: inline-block;
+    margin: 0 2px;
+    padding: 0 7px;
+    border: 1px solid #26292e;
+    border-radius: 3px;
+    background: #3d4049;
+    line-height: 25px;
+    color: #c3c3c3 !important;
+    cursor: pointer;
+    text-decoration:none;
+    width:80px;
+}

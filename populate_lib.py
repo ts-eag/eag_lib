@@ -16,7 +16,7 @@ def populate():
     user_jo = add_user('Jo')
     user_oh = add_user('Oh')
 
-    man_room = add_room('Man')
+    room_man = add_room('Man')
 
     status_available = add_status('Available')
     status_noavailable = add_status('Pass')
@@ -25,48 +25,48 @@ def populate():
     type_nopartition = add_type('No Partition')
 
 
-    seat1 = add_seat(room=man_room,
+    seat1 = add_seat(room=room_man,
              seat_num=1,
-             status_id=status_available,
-             type_id=type_partition
+             status=status_available,
+             type=type_partition
     )
 
-    seat2 = add_seat(room=man_room,
+    seat2 = add_seat(room=room_man,
          seat_num=2,
-         status_id=status_available,
-         type_id=type_partition
+         status=status_available,
+         type=type_partition
     )
 
-    seat3 = add_seat(room=man_room,
+    seat3 = add_seat(room=room_man,
          seat_num=3,
-         status_id=status_available,
-         type_id=type_partition
+         status=status_available,
+         type=type_partition
     )
 
-    seat4 = add_seat(room=man_room,
+    seat4 = add_seat(room=room_man,
          seat_num=4,
-         status_id=status_available,
-         type_id=type_partition
+         status=status_available,
+         type=type_partition
     )
 
-    seat5 = add_seat(room=man_room,
+    seat5 = add_seat(room=room_man,
          seat_num=15,
-         status_id=status_noavailable,
-         type_id=type_nopartition
+         status=status_noavailable,
+         type=type_nopartition
     )
 
-    woman_room = add_room('Woman')
+    room_woman = add_room('Woman')
 
-    seat6 = add_seat(room=woman_room,
+    seat6 = add_seat(room=room_woman,
          seat_num=10,
-         status_id=status_available,
-         type_id=type_partition
+         status=status_available,
+         type=type_partition
     )
 
-    seat7 = add_seat(room=woman_room,
+    seat7 = add_seat(room=room_woman,
          seat_num=13,
-         status_id=status_available,
-         type_id=type_nopartition
+         status=status_available,
+         type=type_nopartition
     )
 
 
@@ -74,23 +74,23 @@ def populate():
     end = now + timedelta(hours=4)
 
     add_reservation(
-        user_id=user_jo, seat_id=seat1, start_time=now, end_time=end
+        user=user_jo, seat=seat1, start_time=now, end_time=end
     )
 
     add_reservation(
-        user_id=user_jo, seat_id=seat3, start_time=now, end_time=end
+        user=user_jo, seat=seat3, start_time=now, end_time=end
     )
 
     add_reservation(
-        user_id=user_oh, seat_id=seat4, start_time=now, end_time=end
+        user=user_oh, seat=seat4, start_time=now, end_time=end
     )
 
     add_extension_time(
-        user_id=user_jo, date=date.today(), frequency=0
+        user=user_jo, date=date.today(), frequency=0
     )
 
     add_extension_time(
-        user_id=user_oh, date=date.today(), frequency=0
+        user=user_oh, date=date.today(), frequency=0
     )
 
     # # Print out what we have added to the user.
@@ -104,28 +104,28 @@ def add_user(name):
     return n
 
 
-def add_seat(room, seat_num, status_id, type_id):
+def add_seat(room, seat_num, status, type):
     r = Seat.objects.get_or_create(
-        room_id=room,
+        room=room,
         seat_num=seat_num,
-        status_id=status_id,
-        type_id=type_id
+        status=status,
+        type=type
     )[0]
     return r
 
 
-def add_reservation(user_id, seat_id, start_time, end_time):
+def add_reservation(user, seat, start_time, end_time):
     r = Reservation.objects.get_or_create(
-        user_id=user_id, seat_id=seat_id, start_time=start_time, end_time=end_time
+        user=user, seat=seat, start_time=start_time, end_time=end_time
     )
     return r
 
 
 
-def add_extension_time(user_id, date, frequency):
+def add_extension_time(user, date, frequency):
     try:
         e = ExtensionTime.objects.get_or_create(
-            user_id=user_id, date=date, frequency=frequency
+            user=user, date=date, frequency=frequency
         )
     except Exception as e:
         print(e)

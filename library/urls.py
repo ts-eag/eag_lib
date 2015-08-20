@@ -3,6 +3,7 @@ from django.contrib import admin
 from library import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.home_page, name='home'),
-    url(r'^man_room/$', views.man_room, name='man_room'),
+    url(r'^$', views.index, name='index'),
+    url(r'^man/$', views.man, name='man'),
+    # url(r'^woman_room/$', views.man_room, name='woman_room'),
 )

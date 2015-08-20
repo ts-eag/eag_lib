@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}도서관{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-8 col-md-8">
+            <h3>
+                <img src="{% static 'images/front_img.png' %}" />
+                도서관
+            </h3>
+        </div>
+        <div class="col-xs-4 col-md-4">
+            <input id="opcl_btn" class="btn btn-default" type="button" value="운영" />
+            <input id="opcl_btn" class="btn btn-default" type="button" value="휴관" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-4">
+            <p>QR코드</p>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <p>좌석정보</p>
+        </div>
+        <div class="col-xs-8 col-md-8">
+            <p>선택된 좌석이 없습니다.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <li>4층 남자 열림실 <strong>45/90</strong><strong>예약</strong></li>
+                </div>
+                <div class="seats">
+                    <img src="{% static 'images/close_02.png' %}" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                </div>
+                <div class="seats">
+                    <img src="{% static 'images/close_02.png' %}" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {#    <h1>도서관 예약 시스템</h1>#}
+    {##}
+    {#    <h4>Man</h4>#}
+    {#    <ul id="id_man_room">#}
+    {#        <strong id="id_man_room_available">10</strong>/#}
+    {#        <strong id="id_man_room_total">10</strong>#}
+    {#        <a href="{% url 'man_room' %}" class="btn btn-info" role="button">예약</a>#}
+    {#    </ul>#}
+    {##}
+    {#    <h4>Woman</h4>#}
+    {#    <ul id="woman_room">#}
+    {#        <strong id="id_man_room_available">5</strong>/#}
+    {#        <strong id="id_man_room_total">10</strong>#}
+    {#        <a href="{% url 'woman_list' %}" class="btn btn-info" role="button">예약</a>#}
+    {#    </ul>#}
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}3층 남자 열람실{% endblock %}
+
+{% block content %}
+
+{#    {% if used_seats_at_now %}#}
+        <h1>3층 남자 열람실 좌석 현황</h1>
+        <table class="table table-hover table-bordered">
+            <tr>
+                <th>좌석 번호</th>
+                <th>좌석 상태</th>
+{#                <th>좌석 타입</th>#}
+            </tr>
+{#            {% for seat in seats %}#}
+{#                <tr>#}
+{#                    <td>{{ seat.seat_num }}</td>#}
+{#                    <td>{{ seat.status_id }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+
+
+
+
+
+{#            {% for seat in seats %}#}
+{#                <tr>#}
+{#                    <td>{{ seat.seat_num }}</td>#}
+{#                    {% if seat.satus == 'Pass' %}#}
+{#                        <td>Pass</td>#}
+{#                    {% endif %}#}
+{#                    {% if seat in used_seats_at_now %}#}
+{#                        {% if seat == used_seat.seat %}#}
+{#                            <td>X</td>#}
+{#                        {% else %}#}
+{#                            <td>o</td>#}
+{#                        {% endif %}#}
+{#                    {% endif %}#}
+{##}
+{#                </tr>#}
+{#            {% endfor %}#}
+
+
+{#            {% for seat in seats %}#}
+{#                {% for used_seat in used_seats_at_now %}#}
+{#                <tr>#}
+{#                    <td>{{ seat.seat_num }}</td>#}
+{#                        {% if seat == used_seat.seat %}#}
+{#                            <td>사용중</td>#}
+{#                        {% else %}#}
+{#                            <td>사용 가능</td>#}
+{#                        {% endif %}#}
+{#                    <td>{{ seat.type }}</td>#}
+{#                </tr>#}
+{#                {% endfor %}#}
+{#            {% endfor %}#}
+
+
+{#            4번이 예약 가능이라고 떠야 되는데 안뜬다... 로직상 문제.. trigger가 안되서 엄청 돌아가네;#}
+            {% for seat in seats %}
+                <tr>
+                    {% if seat.status.status == 'Pass' %}
+                        <td>{{ seat.seat_num }}</td>
+                        <td>사용 불가</td>
+                    {% else %}
+                        {% for used_seat in used_seats_at_now %}
+                            {% if seat.id == used_seat.id %}
+                                <td>{{ seat.seat_num }}</td>
+                                <td>사용중</td>
+                            {% else %}
+
+                            {% endif %}
+                        {% endfor %}
+{#                        음...이렇게 짜서는 도저히 답이 안나올듯.. list comprehension도 template에서는 안되고;#}
+                        {% if not used_seat.id %}
+                            <td>{{ seat.id }}</td>
+                            <td>예약 가능</td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+{#            {% for used_seat in used_seats_at_now %}#}
+{#                <tr>#}
+{#                    <td>{{ used_seat.seat_id }}</td>#}
+{#                    {% if used_seat.seat_id in seats %}#}
+{#                        <td>예약 가능</td>#}
+{#                    {% else %}#}
+{#                        <td>사용중</td>#}
+{#                    {% endif %}#}
+{#                    <td>{{ used_seat.seat.type }}</td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+
+
+
+{#        used_rooms_at_now #}
+
+        </table>
+{#    {% else %}#}
+{#        <p>현재 예약 가능한 좌석이 없습니다.</p>#}
+{#    {% endif %}#}
+
+{% endblock %}
