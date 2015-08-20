@@ -20,6 +20,7 @@ def populate():
 
     status_available = add_status('Available')
     status_noavailable = add_status('Pass')
+    status_using = add_status('Using')
 
     type_partition = add_type('Partition')
     type_nopartition = add_type('No Partition')
@@ -55,6 +56,12 @@ def populate():
          type=type_nopartition
     )
 
+    seat8 = add_seat(room=room_man,
+         seat_num=16,
+         status=status_using,
+         type=type_nopartition
+    )
+
     room_woman = add_room('Woman')
 
     seat6 = add_seat(room=room_woman,
@@ -83,6 +90,10 @@ def populate():
 
     add_reservation(
         user=user_oh, seat=seat4, start_time=now, end_time=end
+    )
+
+    add_reservation(
+        user=user_oh, seat=seat8, start_time=now, end_time=end
     )
 
     add_extension_time(

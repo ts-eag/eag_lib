@@ -1,3 +1,4 @@
+# coding:utf-8
 from django.contrib import admin
 
 # Register your models here.
@@ -23,6 +24,8 @@ class ExtensionTimeAdmin(admin.ModelAdmin):
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ['pk', 'user', 'seat', 'start_time_strftime',
                     'end_time_strftime', 'seat_status']
+    # list_editable = ['user',]
+    # seat 테이블 inline??
 
 
 class SeatAdmin(admin.ModelAdmin):

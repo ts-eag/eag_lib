@@ -36,6 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third party library
+    'django_cron',
+    # My app
     'library',
     'check_app_version',
 )
@@ -95,3 +98,6 @@ TEMPLATE_DIRS = (
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploaded_files')
 
+CRON_CLASSES = [
+    'library.cron.MyCronJob',
+]

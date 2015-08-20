@@ -152,6 +152,7 @@ class Reservation(models.Model):
         if dup_filter:
             raise ValidationError('This seat:{} is booked at same time'.format(
                 self.seat))
+        # post_save를 통해서 status의 값을 Using으로 변경?
         super(Reservation, self).save(*args, **kwargs)
 
     def start_time_strftime(self):
