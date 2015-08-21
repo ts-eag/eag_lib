@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 import pytz
 from eag_lib import settings
-from eag_lib.settings import RESERVATION_PER_MINS
+from eag_lib.settings import RESERVATION_PER_MINS, EXTENSION_LIMIT
 
 RESERVATION_LIMIT_TIME = 0
 DURATION = 4
@@ -151,17 +151,17 @@ class Reservation(models.Model):
         '''
 
         local_timezone = pytz.timezone(settings.TIME_ZONE)
-        local_time = self.added_time.astimezone(local_timezone)
+        local_time = self.start_time.astimezone(local_timezone)
 
 
         # is_now 필드도 있어야 한다.
         # 이건 현재 등록할 때고 수정할 때는? 현재부터 바로 사용하는게 아니기 때문에 else에서 제어
         if self.is_now:
-            if local_time.minute > RESERVATION_PER_MINS:
+            if local_time.minute >= RESERVATION_PER_MINS:
                 local_time -= timedelta(minutes=local_time.minute % RESERVATION_PER_MINS)
                 self.start_time = local_time.astimezone(pytz.utc)
             else:
-                local_time -= timedelta(local_time.minute)
+                local_time -= timedelta(minutes=local_time.minute)
                 self.start_time = local_time.astimezone(pytz.utc)
         else:
             # 30분 단위로 예약할 수 있게끔 client-side에서 제어. 최종적으로 DB에서 Validation Check
@@ -185,6 +185,13 @@ class Reservation(models.Model):
         if dup_filter:
             raise ValidationError('This seat:{} is booked at same time'.format(
                 self.seat))
+
+        extension_time = ExtensionTime.objects.get_or_create(user=self.user)[0]
+        extension_time_filter = extension_time.frequency >= EXTENSION_LIMIT
+        if extension_time_filter:
+            raise ValidationError(
+                'This User:{} is already booked on today {} times'.format(
+                self.user, extension_time.frequency))
 
         # 한 user당 각 1개씩의 좌석만 예약할 수 있게끔 filter를 추가해야 한다.
 
@@ -227,9 +234,10 @@ class ExtensionTime(models.Model):
     class Meta:
         unique_together = ('user', 'date',)
 
-    def save(self, *args, **kwargs):
-        self.frequency += 1
-        super(ExtensionTime, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # 여기에서 frequency를 +1 해주는구나...-_-;;
+    #     self.frequency += 1
+    #     super(ExtensionTime, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{}:{}'.format(self.user, self.frequency)

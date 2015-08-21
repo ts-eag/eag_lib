@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}3층 남자 열람실{% endblock %}
+
+{% block content %}
+
+{#    {% if used_seats_at_now %}#}
+        <h1>{{ room_name }} 열람실 좌석 현황</h1>
+        <table class="table table-hover table-bordered">
+            <tr>
+                <th>좌석 번호</th>
+                <th>좌석 상태</th>
+                <th>좌석 타입</th>
+            </tr>
+
+            {% for seat in object_list %}
+                <tr>
+                    <td>{{ seat.seat_num }}</td>
+                    {% if seat.status.status == 'Pass' %}
+                        <td>사용 불가</td>
+                    {% elif seat.status.status == 'Using' %}
+                        <td>사용중</td>
+                    {% else %}
+                        <td>예약 가능</td>
+                    {% endif %}
+                    <td>{{ seat.type }}</td>
+                </tr>
+            {% endfor %}
+
+
+
+
+        </table>
+{#    {% else %}#}
+{#        <p>현재 예약 가능한 좌석이 없습니다.</p>#}
+{#    {% endif %}#}
+
+{% endblock %}

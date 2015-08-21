@@ -2,29 +2,13 @@
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
 from eag_lib.settings import RESERVATION_PER_MINS
-from .models import Reservation, Status, Seat
-
-
-# class MyCronJob(CronJobBase):
-#     RUN_EVERY_MINS = 3 # every 1 mins
-#
-#     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
-#     code = 'library.my_cron_job'
-#
-#     def do(self):
-#         from django.utils import timezone
-#         print(timezone.now())
-#
-#         with open('/Users/re4lfl0w/cron.txt', 'a') as f:
-#             f.write('1')
-#             f.write('\n')
-#         # pass # do your thing here
+from .models import Status, Seat
 
 
 class ChangeSeatStatus(CronJobBase):
     '''
     Seat Table의 status를 Using -> Available로 주기적으로 30분에 1번씩 돌면서 변경해 준다.
-
+    status가 Using으로 되어 있는 seat만 불러온 다음 available로 변경해 준다.
     '''
     RUN_EVERY_MINS = RESERVATION_PER_MINS
 

@@ -3,7 +3,7 @@ from django.db.models import signals
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
-from .models import Reservation, Seat, Status
+from .models import Reservation, Seat, Status, ExtensionTime
 
 
 @receiver(post_save, sender=Reservation)
@@ -28,3 +28,12 @@ def reservation_post_delete(sender, instance, **kwargs):
     status_available = Status.objects.get(status='Available')
     instance.seat.status = status_available
     instance.seat.save()
+
+
+@receiver(post_save, sender=Reservation)
+def extensiontime_post_save(sender, instance, created, **kwargs):
+    if created:
+        print(instance.user)
+        extensiontime = ExtensionTime.objects.get_or_create(user=instance.user)[0]
+        extensiontime.frequency += 1
+        extensiontime.save()

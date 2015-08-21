@@ -12,13 +12,13 @@
         <ul id="id_man_room">
             <strong id="id_man_room_available">{{ len_available_man_rooms }}</strong>/
             <strong id="id_man_room_total">{{ len_all_man_rooms }}</strong>
-            <a href="{% url 'man' %}" class="btn btn-info" role="button">예약</a>
+            <a href="{% url 'man_room' %}" class="btn btn-info" role="button">예약</a>
         </ul>
 
         <h4>Woman</h4>
         <ul id="woman_room">
             <strong id="id_woman_room_available">{{ len_available_woman_rooms }}</strong>/
             <strong id="id_woman_room_total">{{ len_all_woman_rooms }}</strong>
-{#            <a href="{% url 'woman_list' %}" class="btn btn-info" role="button">예약</a>#}
+{#            <a href="{% url 'woman_room' %}" class="btn btn-info" role="button">예약</a>#}
         </ul>
 {% endblock %}

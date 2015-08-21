@@ -83,31 +83,32 @@ def populate():
     now = timezone.now()
     end = now + timedelta(hours=4)
     local_time = now.astimezone(pytz.timezone(settings.TIME_ZONE))
-    now2 = local_time + timedelta(minutes=10)
+    now2 = local_time + timedelta(minutes=30)
+    end2 = now2 + timedelta(hours=4)
 
     add_reservation(
-        user=user_jo, seat=seat1, start_time=now2, end_time=end
+        user=user_jo, seat=seat1, start_time=now2, end_time=end2
     )
 
-    add_reservation(
-        user=user_jo, seat=seat3, start_time=now, end_time=end
-    )
+    # add_reservation(
+    #     user=user_jo, seat=seat3, start_time=now, end_time=end
+    # )
 
     add_reservation(
         user=user_oh, seat=seat4, start_time=now, end_time=end
     )
 
-    add_reservation(
-        user=user_oh, seat=seat8, start_time=now, end_time=end
-    )
+    # add_reservation(
+    #     user=user_oh, seat=seat8, start_time=now, end_time=end
+    # )
 
-    add_extension_time(
-        user=user_jo, date=date.today(), frequency=0
-    )
-
-    add_extension_time(
-        user=user_oh, date=date.today(), frequency=0
-    )
+    # add_extension_time(
+    #     user=user_jo, date=date.today(), frequency=0
+    # )
+    #
+    # add_extension_time(
+    #     user=user_oh, date=date.today(), frequency=0
+    # )
 
     # # Print out what we have added to the user.
     # for c in Room.objects.all():

@@ -4,6 +4,8 @@ from library import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
-    url(r'^man/$', views.man, name='man'),
+    # url(r'^(?P<room_name>(man|woman))/$', views.man, name='room_name'),
+    url(r'^man/$', views.ManListView.as_view(), name='man_room'),
+    url(r'^woman/$', views.WomanListView.as_view(), name='woman_room'),
     # url(r'^woman_room/$', views.man_room, name='woman_room'),
 )
