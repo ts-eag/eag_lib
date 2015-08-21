@@ -1,6 +1,9 @@
 # coding: utf-8
 import os
 from datetime import datetime, timedelta, date
+from django.utils import timezone
+import pytz
+from eag_lib import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'eag_lib.settings')
@@ -16,7 +19,7 @@ def populate():
     user_jo = add_user('Jo')
     user_oh = add_user('Oh')
 
-    room_man = add_room('Man')
+    man_room = add_room('Man')
 
     status_available = add_status('Available')
     status_noavailable = add_status('Pass')
@@ -26,37 +29,37 @@ def populate():
     type_nopartition = add_type('No Partition')
 
 
-    seat1 = add_seat(room=room_man,
-             seat_num=1,
-             status=status_available,
-             type=type_partition
+    seat1 = add_seat(room=man_room,
+         seat_num=1,
+         status=status_available,
+         type=type_partition
     )
 
-    seat2 = add_seat(room=room_man,
+    seat2 = add_seat(room=man_room,
          seat_num=2,
          status=status_available,
          type=type_partition
     )
 
-    seat3 = add_seat(room=room_man,
+    seat3 = add_seat(room=man_room,
          seat_num=3,
          status=status_available,
          type=type_partition
     )
 
-    seat4 = add_seat(room=room_man,
+    seat4 = add_seat(room=man_room,
          seat_num=4,
          status=status_available,
          type=type_partition
     )
 
-    seat5 = add_seat(room=room_man,
+    seat5 = add_seat(room=man_room,
          seat_num=15,
          status=status_noavailable,
          type=type_nopartition
     )
 
-    seat8 = add_seat(room=room_man,
+    seat8 = add_seat(room=man_room,
          seat_num=16,
          status=status_using,
          type=type_nopartition
@@ -77,11 +80,13 @@ def populate():
     )
 
 
-    now = datetime.now()
+    now = timezone.now()
     end = now + timedelta(hours=4)
+    local_time = now.astimezone(pytz.timezone(settings.TIME_ZONE))
+    now2 = local_time + timedelta(minutes=10)
 
     add_reservation(
-        user=user_jo, seat=seat1, start_time=now, end_time=end
+        user=user_jo, seat=seat1, start_time=now2, end_time=end
     )
 
     add_reservation(
@@ -116,19 +121,30 @@ def add_user(name):
 
 
 def add_seat(room, seat_num, status, type):
-    r = Seat.objects.get_or_create(
-        room=room,
-        seat_num=seat_num,
-        status=status,
-        type=type
-    )[0]
+
+    # status값이 Available -> Using 으로 바뀌어서 그렇다.
+    try:
+        r = Seat.objects.get_or_create(
+            room=room,
+            seat_num=seat_num,
+            status=status,
+            type=type
+        )
+    except Exception as e:
+        r = Seat.objects.get_or_create(
+            room=room,
+            seat_num=seat_num,
+            # status=status,
+            # type=type
+        )
+    r = r[0]
     return r
 
 
 def add_reservation(user, seat, start_time, end_time):
     r = Reservation.objects.get_or_create(
         user=user, seat=seat, start_time=start_time, end_time=end_time
-    )
+    )[0]
     return r
 
 
@@ -137,7 +153,7 @@ def add_extension_time(user, date, frequency):
     try:
         e = ExtensionTime.objects.get_or_create(
             user=user, date=date, frequency=frequency
-        )
+        )[0]
     except Exception as e:
         print(e)
         pass

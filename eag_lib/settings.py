@@ -99,5 +99,8 @@ MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploaded_files')
 
 CRON_CLASSES = [
-    'library.cron.MyCronJob',
+    'library.cron.ChangeSeatStatus',
 ]
+
+# RESERVATION_PER_MINS = 30
+RESERVATION_PER_MINS = 1

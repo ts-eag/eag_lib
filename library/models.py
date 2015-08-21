@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta, datetime, date
+from datetime import timedelta, date
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
+import pytz
+from eag_lib import settings
+from eag_lib.settings import RESERVATION_PER_MINS
 
 RESERVATION_LIMIT_TIME = 0
 DURATION = 4
@@ -84,12 +87,12 @@ def get_end_time(hours=DURATION):
     '''시작시간 + 4시간 더해서 돌려주기
     종료 시간 수정하려면 이 함수에서
     '''
-    return datetime.now() + timedelta(hours=hours)
+    return timezone.now() + timedelta(hours=hours)
 
 
 def not_duplicate_at_same_time(value):
     '''종료시간 > now 보다 큰 것들 중에서 좌석번호 filtering'''
-    now = datetime.now()
+    now = timezone.now()
     last_time = Reservation.objects.filter(end_time__gte=now).filter(seat_id=value).count()
     duplicate = Reservation.objects.filter(end_time__gte=now).filter(seat_id=value).count()
     # name = Reservation.objects.get(seat_id=value).name
@@ -103,6 +106,10 @@ def validate_start_time(value):
         raise ValidationError('+{}시간 이후로 설정해 주세요.'.format(RESERVATION_LIMIT_TIME))
 
 
+def time_strftime(time):
+    return timezone.localtime(time).strftime('%Y-%m-%d %H:%M:%S')
+
+
 class Reservation(models.Model):
     '''예약
     기본 4시간 예약'''
@@ -112,13 +119,20 @@ class Reservation(models.Model):
     # start_time은 현재 시간보다 이후여야 한다.
     # start_time = models.DateTimeField(default=datetime.now,
     #                                   validators=[validate_start_time])
-    start_time = models.DateTimeField(default=datetime.now)
-    # start_time = models.DateTimeField(default=datetime.now, null=False, blank=False)
+    # start_time = models.DateTimeField(default=datetime.now)
+    # 처음 등록한 시간
+    added_time = models.DateTimeField(default=timezone.now, null=False, blank=False,
+                                      help_text='좌석을 처음 등록한 시간')
+    # 보정이 이루어진 실제 도서관 이용 시작 시간
+    start_time = models.DateTimeField(default=timezone.now, null=False, blank=False,
+                                      help_text='보정(30분 단위)이 이루어진 실제 도서관 이용 시작 시간')
     # start_time을 고정해 놔서 그렇네... 이걸 유동적으로 바꿀 수 있게 하자.
-    end_time = models.DateTimeField(default=get_end_time)
-    # end_time = models.DateTimeField(default=get_end_time, null=False, blank=False)
+    # end_time = models.DateTimeField(default=get_end_time)
+    end_time = models.DateTimeField(default=get_end_time, null=False, blank=False)
     # end_time은 사용자가 변경할 수 없도록. 무조건 start_time + 4시간
     # js로 입력 시간이 바뀌면 자동으로 end_time도 변경되서 보여주게끔 해야겠다.
+    is_now = models.BooleanField(default=True, null=False, blank=False,
+                                 help_text='현재시간부터 도서관 사용')
 
     def __unicode__(self):
         return '{}:{} {}:{}'.format(self.user, self.seat, self.start_time, self.end_time)
@@ -135,7 +149,26 @@ class Reservation(models.Model):
         1. end_time = start_time + 4hours
         2. 동일 시간 중복 제거 Query
         '''
-        self.end_time = self.start_time + timedelta(hours=4)
+
+        local_timezone = pytz.timezone(settings.TIME_ZONE)
+        local_time = self.added_time.astimezone(local_timezone)
+
+
+        # is_now 필드도 있어야 한다.
+        # 이건 현재 등록할 때고 수정할 때는? 현재부터 바로 사용하는게 아니기 때문에 else에서 제어
+        if self.is_now:
+            if local_time.minute > RESERVATION_PER_MINS:
+                local_time -= timedelta(minutes=local_time.minute % RESERVATION_PER_MINS)
+                self.start_time = local_time.astimezone(pytz.utc)
+            else:
+                local_time -= timedelta(local_time.minute)
+                self.start_time = local_time.astimezone(pytz.utc)
+        else:
+            # 30분 단위로 예약할 수 있게끔 client-side에서 제어. 최종적으로 DB에서 Validation Check
+            if not (local_time.minute % RESERVATION_PER_MINS):
+                raise ValidationError('This seat will be book each 30 mins')
+
+        self.end_time = self.start_time + timedelta(hours=DURATION)
 
         status_pass = Status.objects.get(status='Pass')
         pass_filter = self.seat.status == status_pass
@@ -152,21 +185,32 @@ class Reservation(models.Model):
         if dup_filter:
             raise ValidationError('This seat:{} is booked at same time'.format(
                 self.seat))
+
+        # 한 user당 각 1개씩의 좌석만 예약할 수 있게끔 filter를 추가해야 한다.
+
         # post_save를 통해서 status의 값을 Using으로 변경?
         super(Reservation, self).save(*args, **kwargs)
 
+
+
     def start_time_strftime(self):
-        return timezone.localtime(self.start_time).strftime('%Y-%m-%d %H:%M:%S')
+        return time_strftime(self.start_time)
+        # return timezone.localtime(self.start_time).strftime('%Y-%m-%d %H:%M:%S')
+
+    def added_time_strftime(self):
+        return time_strftime(self.added_time)
+        # return timezone.localtime(self.added_time).strftime('%Y-%m-%d %H:%M:%S')
 
     def end_time_strftime(self):
-        return timezone.localtime(self.end_time).strftime('%Y-%m-%d %H:%M:%S')
+        return time_strftime(self.end_time)
+        # return timezone.localtime(self.end_time).strftime('%Y-%m-%d %H:%M:%S')
 
     def seat_status(self):
         return self.seat.status
 
 
 def get_datetime_now():
-    return datetime.now()
+    return timezone.now()
 
 
 class ExtensionTime(models.Model):

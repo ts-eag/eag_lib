@@ -22,8 +22,8 @@ class ExtensionTimeAdmin(admin.ModelAdmin):
 
 
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'user', 'seat', 'start_time_strftime',
-                    'end_time_strftime', 'seat_status']
+    list_display = ['pk', 'user', 'seat', 'added_time_strftime',
+                    'start_time_strftime', 'end_time_strftime', 'seat_status']
     # list_editable = ['user',]
     # seat 테이블 inline??
 
