@@ -3,12 +3,15 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import datetime
+import django.utils.timezone
+from django.conf import settings
 import library.models
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -27,8 +30,10 @@ class Migration(migrations.Migration):
             name='Reservation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('start_time', models.DateTimeField(default=datetime.datetime.now)),
+                ('added_time', models.DateTimeField(default=django.utils.timezone.now, help_text=b'\xec\xa2\x8c\xec\x84\x9d\xec\x9d\x84 \xec\xb2\x98\xec\x9d\x8c \xeb\x93\xb1\xeb\xa1\x9d\xed\x95\x9c \xec\x8b\x9c\xea\xb0\x84')),
+                ('start_time', models.DateTimeField(default=django.utils.timezone.now, help_text=b'\xeb\xb3\xb4\xec\xa0\x95(30\xeb\xb6\x84 \xeb\x8b\xa8\xec\x9c\x84)\xec\x9d\xb4 \xec\x9d\xb4\xeb\xa3\xa8\xec\x96\xb4\xec\xa7\x84 \xec\x8b\xa4\xec\xa0\x9c \xeb\x8f\x84\xec\x84\x9c\xea\xb4\x80 \xec\x9d\xb4\xec\x9a\xa9 \xec\x8b\x9c\xec\x9e\x91 \xec\x8b\x9c\xea\xb0\x84')),
                 ('end_time', models.DateTimeField(default=library.models.get_end_time)),
+                ('is_now', models.BooleanField(default=True, help_text=b'\xed\x98\x84\xec\x9e\xac\xec\x8b\x9c\xea\xb0\x84\xeb\xb6\x80\xed\x84\xb0 \xeb\x8f\x84\xec\x84\x9c\xea\xb4\x80 \xec\x82\xac\xec\x9a\xa9')),
             ],
             options={
             },
@@ -78,12 +83,16 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='User',
+            name='UserProfile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=50)),
+                ('phone', models.CharField(max_length=25, null=True, blank=True)),
+                ('user', models.OneToOneField(related_name=b'profile', verbose_name='user', to=settings.AUTH_USER_MODEL)),
             ],
             options={
+                'ordering': ('user',),
+                'verbose_name': 'Profile',
+                'verbose_name_plural': 'Profiles',
             },
             bases=(models.Model,),
         ),
@@ -108,13 +117,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='reservation',
             name='user',
-            field=models.ForeignKey(to='library.User'),
+            field=models.ForeignKey(to='library.UserProfile'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='extensiontime',
             name='user',
-            field=models.ForeignKey(to='library.User'),
+            field=models.ForeignKey(to='library.UserProfile'),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(

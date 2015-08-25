@@ -90,3 +90,5 @@ class WomanListView(ListView):
         return context
 
 
+def register(request):
+    registered = False

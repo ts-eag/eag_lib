@@ -2,7 +2,14 @@
 from django.contrib import admin
 
 # Register your models here.
-from library.models import Seat, Room, User, Reservation, Type, Status, ExtensionTime
+from library.models import Seat, Room, Reservation, Type, Status, ExtensionTime, UserProfile
+
+
+class UserProfileAdmin(admin.ModelAdmin):
+
+    list_display = ("username", "phone")
+
+    search_fields = ["user__username"]
 
 
 class RoomAdmin(admin.ModelAdmin):
@@ -33,7 +40,7 @@ class SeatAdmin(admin.ModelAdmin):
     list_filter = ['room', 'status', 'type']
 
 
-admin.site.register(User)
+admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Seat, SeatAdmin)
 admin.site.register(Type)
 admin.site.register(Status)

@@ -12,12 +12,12 @@ import django
 django.setup()
 
 # Must django.setup() before from rango.models import Category, Page
-from library.models import Room, Seat, User, Status, Type, Reservation, ExtensionTime
+from library.models import Room, Seat, User, Status, Type, Reservation, ExtensionTime, UserProfile
 
 
 def populate():
-    user_jo = add_user('Jo')
-    user_oh = add_user('Oh')
+    user_jo = get_profile(add_user('Jo'))
+    user_oh = get_profile(add_user('Oh'))
 
     man_room = add_room('Man')
 
@@ -61,7 +61,7 @@ def populate():
 
     seat8 = add_seat(room=man_room,
          seat_num=16,
-         status=status_using,
+         status=status_available,
          type=type_nopartition
     )
 
@@ -117,8 +117,12 @@ def populate():
 
 
 def add_user(name):
-    n = User.objects.get_or_create(name=name)[0]
-    return n
+    user = User.objects.get_or_create(username=name)[0]
+    return user
+
+
+def get_profile(user):
+    return UserProfile.objects.get(user=user)
 
 
 def add_seat(room, seat_num, status, type):

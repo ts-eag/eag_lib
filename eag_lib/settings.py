@@ -1,3 +1,4 @@
+# coding:utf-8
 """
 Django settings for eag_lib project.
 
@@ -10,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -36,8 +38,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     # Third party library
     'django_cron',
+    'registration',
+    'crispy_forms',
     # My app
     'library',
     'check_app_version',
@@ -105,3 +110,17 @@ CRON_CLASSES = [
 # RESERVATION_PER_MINS = 30
 RESERVATION_PER_MINS = 30
 EXTENSION_LIMIT = 1
+
+# I will make Config Table
+# EXTENSION_LIMIT, RESERVATION_PER_MINS, etc
+
+
+
+# Crispy FORM TAGs SETTINGS
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# DJANGO REGISTRATIOn REDUX SETTINGS
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'

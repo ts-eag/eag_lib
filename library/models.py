@@ -1,25 +1,73 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import pytz
 from datetime import timedelta, date
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-import pytz
-from eag_lib import settings
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
+
 from eag_lib.settings import RESERVATION_PER_MINS, EXTENSION_LIMIT
+from . import managers
 
 RESERVATION_LIMIT_TIME = 0
 DURATION = 4
 
-class User(models.Model):
-    '''사용자'''
-    name = models.CharField(max_length=50, null=False, blank=False)
-    # email = models.EmailField()
+
+# @python_2_unicode_compatible
+# class User(models.Model):
+#     user = models.OneToOneField(User)
+#
+#     phone = models.CharField(max_length=20)
+#
+#     def __str__(self):
+#         return self.user.username
+
+
+@python_2_unicode_compatible
+class UserProfile(models.Model):
+    # Relations
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                related_name='profile',
+                                verbose_name=_('user'))
+
+    # Attributes
+    phone = models.CharField(max_length=25, blank=True, null=True)
+
+    # Attributes - Optional
+    # Object Manager
+    objects = managers.ProfileManager()
+
+    # Custom Properties
+    @property
+    def username(self):
+        return self.user.username
+
+    # Methods
+
+    # Meta and String
+    class Meta:
+        verbose_name = _('Profile')
+        verbose_name_plural = _('Profiles')
+        ordering = ('user',)
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
 
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_profile_for_new_user(sender, created, instance, **kwargs):
+    if created:
+        profile = UserProfile(user=instance)
+        profile.save()
+
+
+@python_2_unicode_compatible
 class Room(models.Model):
     '''남자방, 여자방 같이'''
     name = models.CharField(max_length=50, null=False, blank=False,
@@ -29,6 +77,7 @@ class Room(models.Model):
         return self.name
 
 
+@python_2_unicode_compatible
 class Status(models.Model):
     '''좌석 예약이 가능한지?
     Pass, Available
@@ -44,6 +93,8 @@ class Status(models.Model):
     def __str__(self):
         return self.status
 
+
+@python_2_unicode_compatible
 class Type(models.Model):
     '''좌석의 속성중 하나. 칸막이 여부'''
     type = models.CharField(max_length=50, null=False, blank=False,
@@ -53,6 +104,7 @@ class Type(models.Model):
         return self.type
 
 
+@python_2_unicode_compatible
 class Seat(models.Model):
     '''좌석'''
     room = models.ForeignKey(Room)
@@ -110,10 +162,11 @@ def time_strftime(time):
     return timezone.localtime(time).strftime('%Y-%m-%d %H:%M:%S')
 
 
+@python_2_unicode_compatible
 class Reservation(models.Model):
     '''예약
     기본 4시간 예약'''
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserProfile)
     seat = models.ForeignKey(Seat)
     # validator
     # start_time은 현재 시간보다 이후여야 한다.
@@ -134,7 +187,7 @@ class Reservation(models.Model):
     is_now = models.BooleanField(default=True, null=False, blank=False,
                                  help_text='현재시간부터 도서관 사용')
 
-    def __unicode__(self):
+    def __str__(self):
         return '{}:{} {}:{}'.format(self.user, self.seat, self.start_time, self.end_time)
 
     # def save(self):
@@ -186,7 +239,13 @@ class Reservation(models.Model):
             raise ValidationError('This seat:{} is booked at same time'.format(
                 self.seat))
 
-        extension_time = ExtensionTime.objects.get_or_create(user=self.user)[0]
+        # 여기에서 만들어 버리면 안될것 같은데..?
+        # today만 제어할 수 있나?
+        # today에 대한 DB 모델을 다시 짜야할듯.. 됨..
+        # 어쩄든
+        extension_time = ExtensionTime.objects.get_or_create(
+            user=self.user, date=timezone.now().date())[0]
+        # 이때 frequency는 post_save가 실행되지 않았기 때문에 0임.
         extension_time_filter = extension_time.frequency >= EXTENSION_LIMIT
         if extension_time_filter:
             raise ValidationError(
@@ -220,13 +279,14 @@ def get_datetime_now():
     return timezone.now()
 
 
+@python_2_unicode_compatible
 class ExtensionTime(models.Model):
     '''연장
     하루에 1번만 연장 가능
     모델을 조회해서 특정 user가 없으면 예약 가능
     특정 user의 today의 frequency가 1 이상이라면 예약할 수 없다.
     '''
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserProfile)
     # date = models.DateField(default=get_datetime_now)
     date = models.DateField(default=date.today, null=False, blank=False)
     frequency = models.PositiveIntegerField(default=0, null=False, blank=False)
