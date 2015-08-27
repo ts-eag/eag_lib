@@ -6,19 +6,21 @@
 {% block content %}
 
 
-        <h1>도서관 예약 시스템</h1>
+        <h1>{{ user.username }}님 예약 현황</h1>
 
-        <h4>Man 예약 가능 좌석 수</h4>
-        <ul id="id_man_room">
-            <strong id="id_man_room_available">{{ len_available_man_rooms }}</strong>/
-            <strong id="id_man_room_total">{{ len_all_man_rooms }}</strong>
-            <a href="{% url 'man_room' %}" class="btn btn-info" role="button">예약</a>
-        </ul>
-
-        <h4>Woman</h4>
-        <ul id="woman_room">
-            <strong id="id_woman_room_available">{{ len_available_woman_rooms }}</strong>/
-            <strong id="id_woman_room_total">{{ len_all_woman_rooms }}</strong>
-{#            <a href="{% url 'woman_room' %}" class="btn btn-info" role="button">예약</a>#}
-        </ul>
+        <table class="table">
+            <tr>
+                <td>번호</td>
+                <td>시작 시간</td>
+                <td>종료 시간</td>
+{#                <td></td>#}
+            </tr>
+            <tr>
+                {% for reservation in reservations %}
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ reservation.start_time_strftime }}</td>
+                    <td>{{ reservation.end_time_strftime }}</td>
+                {% endfor %}
+            </tr>
+        </table>
 {% endblock %}

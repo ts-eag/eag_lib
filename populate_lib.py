@@ -18,6 +18,7 @@ from library.models import Room, Seat, User, Status, Type, Reservation, Extensio
 def populate():
     user_jo = get_profile(add_user('Jo'))
     user_oh = get_profile(add_user('Oh'))
+    user_re4lfl0w = get_profile(add_user('re4lfl0w'))
 
     man_room = add_room('Man')
 

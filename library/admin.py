@@ -25,7 +25,7 @@ class ExtensionTimeAdmin(admin.ModelAdmin):
     list_filter = ['user']
     # list_display_links = ['id', 'title']
     search_fields = ['user', 'date']
-    ordering = ['-user']
+    ordering = ['-id']
 
 
 class ReservationAdmin(admin.ModelAdmin):

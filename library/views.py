@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import ListView
-from library.models import Room, Status, Seat, Reservation, DURATION
+from library.models import Room, Status, Seat, Reservation, DURATION, UserProfile
 
 
 def get_room_status():
@@ -90,5 +90,7 @@ class WomanListView(ListView):
         return context
 
 
-def register(request):
-    registered = False
+def confirm(request):
+    profile = UserProfile.objects.get(user=request.user)
+    context = {'reservations': profile.reservation_set.order_by('-start_time') }
+    return render(request, 'library/confirm.html', context)

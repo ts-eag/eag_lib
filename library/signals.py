@@ -1,8 +1,10 @@
 # coding: utf-8
+from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import signals
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
+from django.utils import timezone
 from .models import Reservation, Seat, Status, ExtensionTime
 
 
@@ -34,6 +36,18 @@ def reservation_post_delete(sender, instance, **kwargs):
 def extensiontime_post_save(sender, instance, created, **kwargs):
     if created:
         print(instance.user)
-        extensiontime = ExtensionTime.objects.get_or_create(user=instance.user)[0]
-        extensiontime.frequency += 1
-        extensiontime.save()
+        # 여러개가 돌아온다: user, 날짜로 unique 하게 만드니, 다른 날짜에 예약하면 2개가 생김
+        try:
+            extensiontime = ExtensionTime.objects.get_or_create(user=instance.user)[0]
+            extensiontime.frequency += 1
+            extensiontime.save()
+        except MultipleObjectsReturned:
+            extensiontime = ExtensionTime.objects.filter(user=instance.user).last()
+            extensiontime.frequency += 1
+            extensiontime.save()
+
+@receiver(post_delete, sender=Reservation)
+def reservation_post_delete(sender, instance, **kwargs):
+    if instance.start_time > timezone.now():
+        extensiontime = ExtensionTime.objects.get(user=instance.user, date=instance.start_time)
+        extensiontime.delete()

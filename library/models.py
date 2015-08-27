@@ -210,6 +210,7 @@ class Reservation(models.Model):
         # is_now 필드도 있어야 한다.
         # 이건 현재 등록할 때고 수정할 때는? 현재부터 바로 사용하는게 아니기 때문에 else에서 제어
         if self.is_now:
+            local_time = self.added_time.astimezone(local_timezone)
             if local_time.minute >= RESERVATION_PER_MINS:
                 local_time -= timedelta(minutes=local_time.minute % RESERVATION_PER_MINS)
                 self.start_time = local_time.astimezone(pytz.utc)
@@ -223,7 +224,14 @@ class Reservation(models.Model):
 
         self.end_time = self.start_time + timedelta(hours=DURATION)
 
+        if not self.is_now:
+            if self.start_time < timezone.now():
+                raise ValidationError(
+                    'Past is not book'
+                )
+
         status_pass = Status.objects.get(status='Pass')
+        status_using = Status.objects.get(status='Using')
         pass_filter = self.seat.status == status_pass
         if pass_filter:
             raise ValidationError('This seat:{} will not booked. Because pass seat.'.
@@ -243,8 +251,9 @@ class Reservation(models.Model):
         # today만 제어할 수 있나?
         # today에 대한 DB 모델을 다시 짜야할듯.. 됨..
         # 어쩄든
+        # timezone.now -> start_time
         extension_time = ExtensionTime.objects.get_or_create(
-            user=self.user, date=timezone.now().date())[0]
+            user=self.user, date=self.start_time.date())[0]
         # 이때 frequency는 post_save가 실행되지 않았기 때문에 0임.
         extension_time_filter = extension_time.frequency >= EXTENSION_LIMIT
         if extension_time_filter:
@@ -253,6 +262,16 @@ class Reservation(models.Model):
                 self.user, extension_time.frequency))
 
         # 한 user당 각 1개씩의 좌석만 예약할 수 있게끔 filter를 추가해야 한다.
+        # Using 활용
+        # 에약을 하지 않은 사람이 있을 수도 있네...
+        profile = UserProfile.objects.get(user=self.user)
+        reservation = profile.reservation_set.last()
+        if reservation:
+            only_one_book_seat_filter = reservation.seat.status == status_using
+            if only_one_book_seat_filter:
+                raise ValidationError(
+                    '{}: You are already booked on seat. Only one seat will book.'.format(self.user)
+                )
 
         # post_save를 통해서 status의 값을 Using으로 변경?
         super(Reservation, self).save(*args, **kwargs)

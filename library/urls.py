@@ -3,7 +3,9 @@ from django.contrib import admin
 from library import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.index, name='query'),
+    url(r'^$', views.index, name='book'),
+    url(r'^confirm/$', views.confirm, name='confirm'),
     # url(r'^(?P<room_name>(man|woman))/$', views.man, name='room_name'),
     url(r'^man/$', views.ManListView.as_view(), name='man_room'),
     url(r'^woman/$', views.WomanListView.as_view(), name='woman_room'),
