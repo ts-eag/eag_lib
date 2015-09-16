@@ -55,8 +55,7 @@ def _install_python(python_url):
 
 
 def _install_pip(site_folder, pip_url):
-    current_pip = run('pip --version')
-    if not '2.7' in current_pip:
+    if not exists('/usr/local/bin/pip'):
         with cd('/tmp'):
             run('wget --no-check-certificate {}'.format(pip_url))
             fname = path.split(pip_url)[-1]
