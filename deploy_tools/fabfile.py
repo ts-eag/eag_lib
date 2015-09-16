@@ -1,17 +1,17 @@
+from __future__ import print_function
 from os import path
 from fabric.contrib.files import append, exists, sed
 from fabric.api import env, local, run, cd
 import random
 
-REPO_URL = 'https://github.com/ts-eag/eag_lib.git'
+# REPO_URL = 'https://github.com/ts-eag/eag_lib.git'
+REPO_URL = 'git://github.com/ts-eag/eag_lib.git'
 
 
 def deploy():
     # site_folder = '/home/{}/_git/{}'.format(env.user, env.host)
     folder_name = 'eag_lib'
     site_folder = '/home/{}/_git/{}'.format(env.user, folder_name)
-    print('site_folder....', site_folder)
-    print(env.user)
     assert site_folder, 'root'
     source_folder = site_folder + '/source'
     python_url = 'https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tar.xz'
@@ -22,6 +22,9 @@ def deploy():
     _create_directory_structure_if_necessary(site_folder)
     _get_latest_source(source_folder)
     _make_virtualenv(source_folder)
+    _make_start_shell(source_folder)
+
+
     # _update_settings(source_folder, env.host)
     # _update_virtualenv(source_folder)
     # _update_static_files(source_folder)
@@ -61,8 +64,6 @@ def _install_pip(site_folder, pip_url):
     run('pip2.7 install virtualenv')
     run('pip2.7 install virtualenvwrapper')
     settings_bashrc = '~/.bashrc'
-    print('site_folder....', path.join(site_folder, 'virtualenv'))
-    print('site_folder....', site_folder)
     append(settings_bashrc, '\nexport WORKON_HOME={}'.format(
         path.join(site_folder, 'virtualenv')))
     append(settings_bashrc, '\nsource /usr/local/bin/virtualenvwrapper.sh')
@@ -86,21 +87,34 @@ def _get_latest_source(source_folder):
     else:
         run('git clone {} {}'.format(REPO_URL, source_folder))
     current_commit = local('git log -n 1 --format=%H', capture=True)
-    run('git reset --hard {}'.format(current_commit))
+    with cd(source_folder):
+        run('git reset --hard {}'.format(current_commit))
 
 
 def _make_virtualenv(source_folder):
     virtualenv_folder = source_folder + '/../virtualenv/python2'
     if not exists(virtualenv_folder + '/bin/pip'):
-        run('virtualenv --python=python2 %s' % (virtualenv_folder,))
+        run('virtualenv %s' % (virtualenv_folder,))
     run('%s/bin/pip install -r %s/requirements.txt' % (
         virtualenv_folder, source_folder
                                                       )
     )
+    virtualenv_python = path.join(virtualenv_folder, 'bin', 'python')
+    # migrate
+    with cd(source_folder):
+        run('{} manage.py migrate'.format(virtualenv_python))
+        run('{} populate_lib.py'.format(virtualenv_python))
 
 
-
-
+def _make_start_shell(source_folder):
+    virtualenv_folder = source_folder + '/../virtualenv/python2'
+    run('echo "source {0}/bin/activate && cd {1} && python manage.py runserver {2}:8001 &" > {3}'.format(
+        virtualenv_folder, source_folder, env.host, '~/eag_lib.sh'))
+    run('echo \'ps -ef | grep runserver | awk "{{print $2}}" | xargs kill -9\' > {}'.format(
+        '~/eag_lib_kill.sh'
+    ))
+    run('chmod 700 ~/eag_lib.sh')
+    run('chmod 700 ~/eag_lib_kill.sh')
 
 
 
